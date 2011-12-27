@@ -1,21 +1,22 @@
-# Using WebSolr with Java on Heroku
+# Websolr & Heroku with Play!
 
-This is a sample project that demonstrates how to use  [WebSolr add on](http://addons.heroku.com/websolr) with Java on Heroku. [WebSolr](http://websolr.com/) is essentially a hosted version of [Apache Solr](http://lucene.apache.org/solr/) which is a really fast and flexible search and indexing platform that can search/index any data. This project also uses the [JQuery Autocomplete](http://docs.jquery.com/Plugins/Autocomplete) plugin and [SolrJ](http://wiki.apache.org/solr/Solrj), a Java API to communicate with any Solr instance.
+This is a sample project that demonstrates how to use  [WebSolr add on](http://addons.heroku.com/websolr) with [Play!](http://www.playframework.org) on Heroku. [WebSolr](http://websolr.com/) is essentially a hosted version of [Apache Solr](http://lucene.apache.org/solr/) which is a really fast and flexible search and indexing platform that can search/index any data. This project also uses the [JQuery Autocomplete](http://docs.jquery.com/Plugins/Autocomplete) plugin and [SolrJ](http://wiki.apache.org/solr/Solrj), a Java API to communicate with any Solr instance.
 
 __*Note*__: This project is by no means a demonstration of all of Solr's capabilties. Please refer to the Solr wiki for more information on additional features and functionality that you can leverage with Solr. 
 
 ## Pre-requisites
 
-- Basic knowledge of Java and Java servlets
+- KNowledge of the Play! framework
 - Knowledge of JQuery and using plugins
 - Understanding of Solr and Solr Queries.
 
 ## How does it work?
 
-Most of the magic happens in two main components:
+Most of the magic happens in the components:
 
-1. `index.jsp` : This contains the JQuery autocomplete code and includes the Autocomplete Javascripts and CSS.
-2. `SolrProxy.java` : This is a servlet that acts as a proxy the WebSolr index URL that is exposed on provision the add-on to your heroku account.
+1. `app\views\Application\index.html` : This contains the JQuery autocomplete code and includes the Autocomplete Javascripts and CSS.
+2. `SolrSearch.java` : This is Play controller that acts as a proxy the WebSolr index URL that is exposed on provision the add-on to your heroku account.
+3. `app\views\SolrSearch\search.html` & `app\views\SolrSearch\facetedSearch.html` : Templates to display the Search results.
 
 ## Provisioning WebSolr
 
@@ -41,7 +42,7 @@ SolrJ is a pure java client to communicate with your Solr instance. Refer to [ht
 
 ## Using SolrJ and WebSolr
 
-`SolrProxy.java` is the main Java servlet that does the communication with the WebSolr index URL. The code snippet that performs the query is below:
+`SolrSearch.java` is the controller that does the communication with the WebSolr index URL. The code snippet that performs the query is below:
 
 
       SolrQuery query = new SolrQuery();
@@ -56,5 +57,5 @@ SolrJ is a pure java client to communicate with your Solr instance. Refer to [ht
       QueryResponse queryResponse = server.query(query);
       end = System.currentTimeMillis();
 
-To see a working example of this, go to [http://websolr-java.herokuapp.com](http://websolr-java.herokuapp.com)
+To see a working example of this, go to [http://websolr-play.herokuapp.com](http://websolr-play.herokuapp.com)
 
