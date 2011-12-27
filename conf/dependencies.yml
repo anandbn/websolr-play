@@ -1,0 +1,5 @@
+# Application dependencies
+
+require:
+    - play
+    - org.apache.solr -> solr-core 1.4.0
