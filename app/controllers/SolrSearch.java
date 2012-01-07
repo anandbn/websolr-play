@@ -4,8 +4,12 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import play.mvc.Controller;
+import play.mvc.Http.Header;
+
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
@@ -17,6 +21,10 @@ public class SolrSearch extends Controller {
 	private static final String solrSearchIndex = System.getenv("WEBSOLR_URL");
 	
 	public static void stats(){
+			
+		for(Entry<String,Header> reqHeader:request.headers.entrySet()){
+			System.out.println(String.format(">>>>>>>>>>>>>>>>>> Header Name:%s,Value=%s",reqHeader.getKey(),reqHeader.getValue().values));
+		}
 		try {
 			CommonsHttpSolrServer server = new CommonsHttpSolrServer(solrSearchIndex);
 			SolrQuery query = new SolrQuery();
