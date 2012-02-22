@@ -1,0 +1,44 @@
+#{extends 'main.html' /}
+#{set title:'WebSolr & Heroku with Play!' /}
+
+<body>
+<script type="text/javascript">
+$().ready(
+	function() {
+		$('#faceted_search').click(
+			function(){
+				$("#searchText").setOptions({extraParams:{facetedSearch:'true'}});
+			}
+		);
+		$('#text_search').click(
+			function(){
+				$("#searchText").setOptions({extraParams:{facetedSearch:'false'}});
+			}
+		);
+		
+		var statsAction = #{jsAction @SolrSearch.stats() /};
+		var searchAction= #{jsAction @SolrSearch.search() /};
+		
+		$("#searchText").autocomplete(searchAction(), {selectFirst: false,scroll:false});
+		$("#search_info").load(statsAction());
+	}
+);
+</script>
+<div id="content">
+	
+	<form id="searchform" autocomplete="off">
+		<p>
+		<div id="search_info" class="search_info"></div>
+		</p>
+		<p align="center">
+		<div class="search_info">
+			<input name="facetedSearch" value="false" type="radio" id="text_search" checked/>&nbsp;&nbsp;Text Search&nbsp;&nbsp;
+            <input name="facetedSearch" value="true" id="faceted_search" type="radio" />&nbsp;&nbsp;Faceted Search
+		</div>
+		</p>
+		<p>
+		  <input type="text" id="searchText" size="500" maxlength="300" length="200"/>
+	  </p>
+  </form>
+</div>
+</body>

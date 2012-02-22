@@ -1,6 +1,5 @@
 # Application dependencies
 
 require:
-    - play
-    - play -> gravatar 1.0.2
+    - play -> force 0.7
     - org.apache.solr -> solr-core 1.4.0
