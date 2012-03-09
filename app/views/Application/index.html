@@ -2,25 +2,55 @@
 #{set title:'WebSolr & Heroku with Play!' /}
 
 <body>
+<script src="http://github.com/janl/mustache.js/raw/master/mustache.js"></script>  
+
 <script type="text/javascript">
 $().ready(
 	function() {
-		$('#faceted_search').click(
-			function(){
-				$("#searchText").setOptions({extraParams:{facetedSearch:'true'}});
-			}
-		);
-		$('#text_search').click(
-			function(){
-				$("#searchText").setOptions({extraParams:{facetedSearch:'false'}});
-			}
-		);
+		
+		$("#searchText").setOptions({extraParams:{facetedSearch:'false'}});
 		
 		var statsAction = #{jsAction @SolrSearch.stats() /};
 		var searchAction= #{jsAction @SolrSearch.search() /};
 		
-		$("#searchText").autocomplete(searchAction(), {selectFirst: false,scroll:false});
-		$("#search_info").load(statsAction());
+		$("#searchText").autocomplete(
+			searchAction(), 
+			{
+				selectFirst: false,
+				scroll:false,
+				highlight:false,
+				parse: function(data) {
+					//console.log(data);
+					var array = new Array();
+					var results = data.response.docs;
+                	for(var i=0;i<results.length;i++){
+                		array[i] = {data:results[i],value:results[i],result:results[i].id};
+                	}
+                	template ="Query time: {{responseHeader.QTime}} ms, # of Matches : {{response.numFound}}";                 
+                	$("#queryTime").html(Mustache.to_html(template, data));
+                	return array;
+                
+        		},
+
+        		formatItem: function(row) { 
+        			var template ="<b>{{givenName}}</b>( Phone:{{telephoneNumber}} )<br/>{{streetAddress}}<br/>{{city}},{{state}}-{{zipCode}}<br/><hr>";                 
+                	return Mustache.to_html(template, row);
+        		}
+		  	}
+		);
+		
+		$.ajax({
+            url: statsAction(),
+            cache: false,
+            success: function(data) {
+            	//console.log(data);
+            	var template ="Searching <b>{{response.numFound}}</b> addresses!!!";                 
+                $("#search_info").html(Mustache.to_html(template, data));
+                template ="Query time: {{responseHeader.QTime}} ms";                 
+                $("#queryTime").html(Mustache.to_html(template, data));
+            }
+      	});
+		$("#search_info").load();
 	}
 );
 </script>
@@ -29,12 +59,7 @@ $().ready(
 	<form id="searchform" autocomplete="off">
 		<p>
 		<div id="search_info" class="search_info"></div>
-		</p>
-		<p align="center">
-		<div class="search_info">
-			<input name="facetedSearch" value="false" type="radio" id="text_search" checked/>&nbsp;&nbsp;Text Search&nbsp;&nbsp;
-            <input name="facetedSearch" value="true" id="faceted_search" type="radio" />&nbsp;&nbsp;Faceted Search
-		</div>
+		<div id="queryTime" class="search_timing"></div>
 		</p>
 		<p>
 		  <input type="text" id="searchText" size="500" maxlength="300" length="200"/>

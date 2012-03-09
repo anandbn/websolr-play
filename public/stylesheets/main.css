@@ -91,3 +91,11 @@ input[type=text] { width: 15em; }
 	margin-bottom:10px;
 		
 }
+
+.search_timing{
+	font-size:11px;
+	color:red;
+	margin-top:5px;
+	margin-bottom:5px;
+		
+}
